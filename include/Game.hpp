@@ -1,0 +1,26 @@
+# pragma once
+
+# include <SFML/Graphics.hpp>
+# include <vector>
+# include "Paddle.hpp"
+# include "Ball.hpp"
+# include "Brick.hpp"
+
+class Game {
+public:
+    Game(/* args */);
+    // ~Game();
+    void run();
+    
+private:
+    void processEvents();
+    void update(float dt);
+    void render();
+
+    sf::RenderWindow m_window;
+    Paddle m_paddle;
+    Ball m_ball;
+    std::vector<Brick> m_bricks;
+
+    sf::Clock m_clock;
+};

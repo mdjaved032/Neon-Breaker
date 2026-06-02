@@ -1,0 +1,27 @@
+# Build artifacts
+build/
+bin/
+obj/
+
+# CMake generated files (if run outside of build/)
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+compile_commands.json
+
+# Executables
+BrickBreaker
+*.exe
+*.out
+*.app
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp
+*.save
+
+# System files
+.DS_Store
+Thumbs.db

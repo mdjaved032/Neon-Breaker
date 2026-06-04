@@ -5,6 +5,7 @@
 # include "Paddle.hpp"
 # include "Ball.hpp"
 # include "Brick.hpp"
+# include "Arena.hpp"
 
 class Game {
 public:
@@ -20,6 +21,7 @@ private:
     sf::RenderWindow m_window;
     Paddle m_paddle;
     Ball m_ball;
+    Arena m_arena;
     std::vector<Brick> m_bricks;
 
     sf::Clock m_clock;

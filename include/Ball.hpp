@@ -13,5 +13,5 @@ private:
     sf::CircleShape m_body;
     sf::Vector2f m_velocity;
 
-    const float BALL_RADIUS = 10.f;
+    const float BALL_RADIUS = 6.f;
 };

@@ -47,7 +47,7 @@ void Game::processEvents() {
 
 void Game::update(float dt) {
     m_paddle.handleInput();
-    m_paddle.update(dt);
+    m_paddle.update(dt, m_arena);
     m_ball.update(dt);
 }
 

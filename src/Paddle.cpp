@@ -11,11 +11,25 @@ Paddle::Paddle () {
 }
 
 void Paddle::handleInput() {
-    
+    m_movingIntend = 0.f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) m_movingIntend -= 1.f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) m_movingIntend += 1.f;
 };
 
-void Paddle::update(float dt) {
+void Paddle::update(float dt, Arena &arena) {
+    m_velocity += m_movingIntend * PADDLE_ACCEL * dt;
+    m_velocity -= m_velocity * PADDLE_FRICTION * dt;
+
+    const auto& leftWall = arena.getLeftWall();
+    const auto& rightWall = arena.getRightWall();
     
+    m_body.move(m_velocity * dt, 0.f);
+    if (m_body.getGlobalBounds().intersects(leftWall.getGlobalBounds())) {
+        m_body.setPosition(leftWall.getPosition().x + leftWall.getSize().x + m_body.getSize().x/2, m_body.getPosition().y);
+    }
+    if (m_body.getGlobalBounds().intersects(rightWall.getGlobalBounds())) {
+        m_body.setPosition(rightWall.getPosition().x - m_body.getSize().x/2, m_body.getPosition().y);
+    }
 };
 
 void Paddle::draw(sf::RenderWindow &window) {

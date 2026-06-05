@@ -17,6 +17,8 @@ private:
     void processEvents();
     void update(float dt);
     void render();
+    void restart();
+    void initBricks();
 
     sf::RenderWindow m_window;
     Paddle m_paddle;

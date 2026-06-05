@@ -12,8 +12,8 @@ Paddle::Paddle () {
 
 void Paddle::handleInput() {
     m_movingIntend = 0.f;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) m_movingIntend -= 1.f;
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) m_movingIntend += 1.f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) || sf::Keyboard::isKeyPressed(sf::Keyboard::Left)) m_movingIntend -= 1.f;
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) m_movingIntend += 1.f;
 };
 
 void Paddle::update(float dt, Arena &arena) {

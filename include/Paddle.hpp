@@ -17,8 +17,8 @@ private:
     float m_movingIntend;
     float m_velocity;
 
-    const float PADDLE_ACCEL = 3000.f;
-    const float PADDLE_FRICTION = 5.f;
-    const float PADDLE_WIDTH = 100.f;
-    const float PADDLE_HEIGHT = 10.f;
+    static constexpr float PADDLE_ACCEL = 6000.f;
+    static constexpr float PADDLE_FRICTION = 10.f;
+    static constexpr float PADDLE_WIDTH = 100.f;
+    static constexpr float PADDLE_HEIGHT = 6.f;
 };

@@ -3,23 +3,7 @@
 Game::Game() : m_window(sf::VideoMode(800.f, 600.f), "Neon Breaker") {
     m_window.setFramerateLimit(60);
 
-    const int ROW = 5;
-    const int COL = 15;
-    const int GAP = 2;
-
-    Brick b;
-    int colSpacing = (800 - (COL * b.getSize().x) - ((COL-1) * GAP))/2;
-    int topSpacing = 20;
-
-    for (int i = 0; i < ROW; i++) {
-        for (int j = 0; j < COL; j++) {
-            Brick brick;
-            float x = colSpacing + j * (brick.getSize().x + GAP);
-            float y = topSpacing + i * (brick.getSize().y + GAP);
-            brick.setPosition(x, y);
-            m_bricks.push_back(brick);
-        }
-    }
+    initBricks();
 }
 
 void Game::run () {
@@ -42,6 +26,9 @@ void Game::processEvents() {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
             m_window.close();
         }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+            restart();
+        }
     }
 }
 
@@ -60,4 +47,31 @@ void Game::render() {
     m_ball.draw(m_window);
     m_arena.draw(m_window);
     m_window.display();
+}
+
+void Game::restart() {
+    initBricks();
+    m_ball = Ball();
+    m_paddle = Paddle();
+}
+
+void Game::initBricks() {
+    m_bricks.clear();
+    const int ROW = 5;
+    const int COL = 15;
+    const int GAP = 2;
+
+    Brick b;
+    int colSpacing = (800 - (COL * b.getSize().x) - ((COL-1) * GAP))/2;
+    int topSpacing = 20;
+
+    for (int i = 0; i < ROW; i++) {
+        for (int j = 0; j < COL; j++) {
+            Brick brick;
+            float x = colSpacing + j * (brick.getSize().x + GAP);
+            float y = topSpacing + i * (brick.getSize().y + GAP);
+            brick.setPosition(x, y);
+            m_bricks.push_back(brick);
+        }
+    }
 }

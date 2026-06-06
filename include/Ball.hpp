@@ -5,13 +5,16 @@
 # include "Arena.hpp"
 # include "Brick.hpp"
 # include "Paddle.hpp"
+# include "GameState.hpp"
 
 class Ball {
 public:
     Ball(/* args */);
     // ~Ball();
-    void update(float dt, std::vector<Brick> &bricks, const Paddle &paddle, const Arena &arena);
+    void update(float dt, GameState &state, std::vector<Brick> &bricks, const Paddle &paddle, const Arena &arena);
     void draw(sf::RenderWindow &window);
+    void setPosition(float x, float y) { m_body.setPosition(x, y); }
+    const float getRadius() const { return BALL_RADIUS; }
 
 private:
     sf::CircleShape m_body;

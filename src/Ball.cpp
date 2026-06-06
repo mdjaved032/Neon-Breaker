@@ -9,7 +9,7 @@ Ball::Ball () {
     m_velocity = sf::Vector2f(0.f, VERTICAL_SPEED);
 }
 
-void Ball::update(float dt, std::vector<Brick> &bricks, const Paddle &paddle, const Arena &arena) {
+void Ball::update(float dt, GameState &state, std::vector<Brick> &bricks, const Paddle &paddle, const Arena &arena) {
     const auto &game_paddle = paddle.getPaddle();
     const auto &rightWall = arena.getRightWall();
     const auto &leftWall = arena.getLeftWall();
@@ -88,6 +88,7 @@ void Ball::update(float dt, std::vector<Brick> &bricks, const Paddle &paddle, co
         if (m_body.getGlobalBounds().intersects(floor.getGlobalBounds())) {
             m_body.setPosition({m_body.getPosition().x, floor.getPosition().y - floor.getSize().y - BALL_RADIUS});
             m_velocity = sf::Vector2f(0.f, 0.f);
+            state = GameState::GameOver;
         }
     }
 

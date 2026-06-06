@@ -4,6 +4,14 @@ Game::Game() : m_window(sf::VideoMode(800.f, 600.f), "Neon Breaker") {
     m_window.setFramerateLimit(60);
 
     initBricks();
+    m_state = GameState::Serve;
+
+    if (!m_font.loadFromFile("assets/fonts/PressStart2P-Regular.ttf")) {
+
+    }
+    m_messageText.setFont(m_font);
+    m_messageText.setCharacterSize(30);
+    m_messageText.setFillColor(sf::Color::White);
 }
 
 void Game::run () {
@@ -23,19 +31,65 @@ void Game::processEvents() {
         if (event.type == sf::Event::Closed) {
             m_window.close();
         }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
-            m_window.close();
-        }
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
-            restart();
+        if (event.type == sf::Event::KeyPressed) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) m_window.close();
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) restart();
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+                if (m_state == GameState::Play) {
+                    m_state = GameState::Pause;
+                } else if (m_state == GameState::GameOver) {
+                    restart();
+                } else {
+                    m_state = GameState::Play;
+                }
+            }
         }
     }
 }
 
 void Game::update(float dt) {
-    m_paddle.handleInput();
-    m_paddle.update(dt, m_arena);
-    m_ball.update(dt, m_bricks, m_paddle, m_arena);
+    switch (m_state) {
+        case GameState::Serve: {
+            m_paddle.handleInput();
+            m_paddle.update(dt, m_arena);
+            
+            const auto& paddle = m_paddle.getPaddle();
+            m_ball.setPosition(
+                paddle.getPosition().x,
+                paddle.getPosition().y - paddle.getSize().y/2 - m_ball.getRadius()
+            );
+            break;
+        }
+        case GameState::Play: {
+            m_paddle.handleInput();
+            m_paddle.update(dt, m_arena);
+            m_ball.update(dt, m_state, m_bricks, m_paddle, m_arena);
+
+            if (m_bricks.empty()) m_state = GameState::Win;
+            break;
+        }
+        case GameState::Pause: {
+            m_messageText.setString("PAUSED");
+            sf::FloatRect textBounds = m_messageText.getLocalBounds();
+            m_messageText.setOrigin(textBounds.left + textBounds.width/2, textBounds.top + textBounds.height/2);
+            m_messageText.setPosition(400.f, 300.f);
+            break;
+        }
+        case GameState::GameOver: {
+            m_messageText.setString("GAME OVER");
+            sf::FloatRect textBounds = m_messageText.getLocalBounds();
+            m_messageText.setOrigin(textBounds.left + textBounds.width/2, textBounds.top + textBounds.height/2);
+            m_messageText.setPosition(400.f, 300.f);    
+            break;
+        }
+        case GameState::Win: {
+            m_messageText.setString("YOU WIN!");
+            sf::FloatRect textBounds = m_messageText.getLocalBounds();
+            m_messageText.setOrigin(textBounds.left + textBounds.width/2, textBounds.top + textBounds.height/2);
+            m_messageText.setPosition(400.f, 300.f);
+            break;
+        }
+    }
 }
 
 void Game::render() {
@@ -46,6 +100,10 @@ void Game::render() {
     m_paddle.draw(m_window);
     m_ball.draw(m_window);
     m_arena.draw(m_window);
+
+    if (m_state != GameState::Play && m_state != GameState::Serve) {
+        m_window.draw(m_messageText);
+    }
     m_window.display();
 }
 
@@ -53,6 +111,7 @@ void Game::restart() {
     initBricks();
     m_ball = Ball();
     m_paddle = Paddle();
+    m_state = GameState::Serve;
 }
 
 void Game::initBricks() {

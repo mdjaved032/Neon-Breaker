@@ -7,6 +7,7 @@
 # include "Brick.hpp"
 # include "Arena.hpp"
 # include "GameState.hpp"
+# include "Config.hpp"
 
 class Game {
 public:
@@ -22,9 +23,9 @@ private:
     void initBricks();
 
     sf::RenderWindow m_window;
+    Arena m_arena;
     Paddle m_paddle;
     Ball m_ball;
-    Arena m_arena;
     std::vector<Brick> m_bricks;
     GameState m_state;
     sf::Text m_messageText;

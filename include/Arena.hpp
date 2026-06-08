@@ -1,6 +1,7 @@
 # pragma once
 
 # include <SFML/Graphics.hpp>
+# include "Config.hpp"
 
 class Arena {
 public:

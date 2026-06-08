@@ -1,7 +1,11 @@
 # include "Game.hpp"
 
-Game::Game() : m_window(sf::VideoMode(800.f, 600.f), "Neon Breaker") {
-    m_window.setFramerateLimit(60);
+Game::Game() 
+    : m_window(sf::VideoMode(Config::SCREEN_WIDTH, Config::SCREEN_HEIGHT), "Neon Breaker"),
+      m_paddle(m_arena),
+      m_ball(m_arena)
+{
+    m_window.setFramerateLimit(Config::SCREEN_FRAME_RATE);
 
     initBricks();
     m_state = GameState::Serve;
@@ -51,7 +55,7 @@ void Game::update(float dt) {
     switch (m_state) {
         case GameState::Serve: {
             m_paddle.handleInput();
-            m_paddle.update(dt, m_arena);
+            m_paddle.update(dt);
             
             const auto& paddle = m_paddle.getPaddle();
             m_ball.setPosition(
@@ -62,8 +66,8 @@ void Game::update(float dt) {
         }
         case GameState::Play: {
             m_paddle.handleInput();
-            m_paddle.update(dt, m_arena);
-            m_ball.update(dt, m_state, m_bricks, m_paddle, m_arena);
+            m_paddle.update(dt);
+            m_ball.update(dt, m_state, m_bricks, m_paddle);
 
             if (m_bricks.empty()) m_state = GameState::Win;
             break;
@@ -72,21 +76,21 @@ void Game::update(float dt) {
             m_messageText.setString("PAUSED");
             sf::FloatRect textBounds = m_messageText.getLocalBounds();
             m_messageText.setOrigin(textBounds.left + textBounds.width/2, textBounds.top + textBounds.height/2);
-            m_messageText.setPosition(400.f, 300.f);
+            m_messageText.setPosition(m_arena.getLeftWall().getPosition().x + Config::ARENA_WIDTH/2,m_arena.getRightWall().getPosition().y + Config::ARENA_HEIGHT/2);
             break;
         }
         case GameState::GameOver: {
             m_messageText.setString("GAME OVER");
             sf::FloatRect textBounds = m_messageText.getLocalBounds();
             m_messageText.setOrigin(textBounds.left + textBounds.width/2, textBounds.top + textBounds.height/2);
-            m_messageText.setPosition(400.f, 300.f);    
+            m_messageText.setPosition(m_arena.getLeftWall().getPosition().x + Config::ARENA_WIDTH/2,m_arena.getRightWall().getPosition().y + Config::ARENA_HEIGHT/2);
             break;
         }
         case GameState::Win: {
             m_messageText.setString("YOU WIN!");
             sf::FloatRect textBounds = m_messageText.getLocalBounds();
             m_messageText.setOrigin(textBounds.left + textBounds.width/2, textBounds.top + textBounds.height/2);
-            m_messageText.setPosition(400.f, 300.f);
+            m_messageText.setPosition(m_arena.getLeftWall().getPosition().x + Config::ARENA_WIDTH/2,m_arena.getRightWall().getPosition().y + Config::ARENA_HEIGHT/2);
             break;
         }
     }
@@ -109,8 +113,7 @@ void Game::render() {
 
 void Game::restart() {
     initBricks();
-    m_ball = Ball();
-    m_paddle = Paddle();
+    m_paddle.reset();
     m_state = GameState::Serve;
 }
 
@@ -120,15 +123,14 @@ void Game::initBricks() {
     const int COL = 15;
     const int GAP = 2;
 
-    Brick b;
-    int colSpacing = (800 - (COL * b.getSize().x) - ((COL-1) * GAP))/2;
+    int colSpacing = (Config::ARENA_WIDTH - (COL * Config::BRICK_WIDTH) - ((COL-1) * GAP))/2;
     int topSpacing = 20;
 
     for (int i = 0; i < ROW; i++) {
         for (int j = 0; j < COL; j++) {
             Brick brick;
-            float x = colSpacing + j * (brick.getSize().x + GAP);
-            float y = topSpacing + i * (brick.getSize().y + GAP);
+            float x = m_arena.getLeftWall().getPosition().x + colSpacing + j * (brick.getSize().x + GAP);
+            float y = m_arena.getTopWall().getPosition().y + topSpacing + i * (brick.getSize().y + GAP);
             brick.setPosition(x, y);
             m_bricks.push_back(brick);
         }

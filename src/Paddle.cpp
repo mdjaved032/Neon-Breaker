@@ -1,10 +1,10 @@
 # include "Paddle.hpp"
 
-Paddle::Paddle () {
-    m_body.setSize(sf::Vector2f(PADDLE_WIDTH, PADDLE_HEIGHT));
+Paddle::Paddle (const Arena &arena) : m_arena(arena) {
+    m_body.setSize(sf::Vector2f(Config::PADDLE_WIDTH, Config::PADDLE_HEIGHT));
 
-    m_body.setOrigin(PADDLE_WIDTH/2, PADDLE_HEIGHT/2);
-    m_body.setPosition(400.f, 550.f);
+    m_body.setOrigin(Config::PADDLE_WIDTH/2, Config::PADDLE_HEIGHT/2);
+    m_body.setPosition(m_arena.getLeftWall().getPosition().x + Config::ARENA_WIDTH/2, m_arena.getFloor().getPosition().y - 30.f);
     m_body.setFillColor(sf::Color::Cyan);
 
     m_velocity = 0.f;
@@ -16,12 +16,12 @@ void Paddle::handleInput() {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::D) || sf::Keyboard::isKeyPressed(sf::Keyboard::Right)) m_movingIntend += 1.f;
 };
 
-void Paddle::update(float dt, Arena &arena) {
-    m_velocity += m_movingIntend * PADDLE_ACCEL * dt;
-    m_velocity -= m_velocity * PADDLE_FRICTION * dt;
+void Paddle::update(float dt) {
+    m_velocity += m_movingIntend * Config::PADDLE_ACCEL * dt;
+    m_velocity -= m_velocity * Config::PADDLE_FRICTION * dt;
 
-    const auto& leftWall = arena.getLeftWall();
-    const auto& rightWall = arena.getRightWall();
+    const auto& leftWall = m_arena.getLeftWall();
+    const auto& rightWall = m_arena.getRightWall();
     
     m_body.move(m_velocity * dt, 0.f);
     if (m_body.getGlobalBounds().intersects(leftWall.getGlobalBounds())) {
@@ -35,3 +35,8 @@ void Paddle::update(float dt, Arena &arena) {
 void Paddle::draw(sf::RenderWindow &window) {
     window.draw(m_body);
 };
+
+void Paddle::reset() {
+    m_body.setPosition(m_arena.getLeftWall().getPosition().x + Config::ARENA_WIDTH/2, m_arena.getFloor().getPosition().y - 30.f);
+    m_velocity = 0.f;
+}

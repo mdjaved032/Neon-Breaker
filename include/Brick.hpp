@@ -1,6 +1,7 @@
 # pragma once
 
 # include <SFML/Graphics.hpp>
+# include "Config.hpp"
 
 class Brick {
 public:
@@ -14,6 +15,4 @@ public:
 private:
     sf::RectangleShape m_body;
 
-    static constexpr float BRICK_WIDTH = 50.f;
-    static constexpr float BRICK_HEIGHT = 20.f;
 };

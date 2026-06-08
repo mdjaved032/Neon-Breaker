@@ -1,7 +1,7 @@
 # include "Brick.hpp"
 
 Brick::Brick () {
-    m_body.setSize(sf::Vector2f(BRICK_WIDTH, BRICK_HEIGHT));
+    m_body.setSize(sf::Vector2f(Config::BRICK_WIDTH, Config::BRICK_HEIGHT));
     m_body.setFillColor(sf::Color::Transparent);
     m_body.setOutlineThickness(-1.f);
     m_body.setOutlineColor(sf::Color::Magenta);
@@ -16,5 +16,5 @@ void Brick::setPosition(float x, float y) {
 }
 
 sf::Vector2f Brick::getSize() {
-    return {BRICK_WIDTH, BRICK_HEIGHT};
+    return {Config::BRICK_WIDTH, Config::BRICK_HEIGHT};
 }

@@ -2,23 +2,21 @@
 
 # include <SFML/Graphics.hpp>
 # include "Arena.hpp"
+# include "Config.hpp"
 
 class Paddle {
 public:
-    Paddle(/* args */);
+    Paddle(const Arena &arena);
     // ~Paddle();
     void handleInput();
-    void update(float dt, Arena &arena);
+    void update(float dt);
     void draw(sf::RenderWindow &window);
+    void reset();
     const sf::RectangleShape &getPaddle() const { return m_body; }
 
 private:
     sf::RectangleShape m_body;
     float m_movingIntend;
     float m_velocity;
-
-    static constexpr float PADDLE_ACCEL = 6000.f;
-    static constexpr float PADDLE_FRICTION = 10.f;
-    static constexpr float PADDLE_WIDTH = 100.f;
-    static constexpr float PADDLE_HEIGHT = 6.f;
+    const Arena &m_arena;
 };
